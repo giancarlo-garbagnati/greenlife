@@ -1,2 +1,5 @@
-# greenlife
-Leaf Health Image Classifier
+# greenlife  
+Leaf Health Image Classifier  
+Project Date: April 2017  
+
+
