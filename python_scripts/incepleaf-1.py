@@ -1,3 +1,4 @@
+### imports
 from keras.applications.inception_v3 import InceptionV3
 from keras.preprocessing import image
 from keras.preprocessing.image import ImageDataGenerator
@@ -6,6 +7,7 @@ from keras.layers import Dense, GlobalAveragePooling2D
 from keras import backend as K
 from keras.optimizers import SGD, RMSprop
 
+### helper functions
 # gets jpg count for all images in given directory and all subdirectories
 def jpg_counts(dirpath, verbose=False):
     from os import listdir, walk
@@ -49,6 +51,8 @@ def get_num_classes(dirpath, verbose=False):
     return len(dirlist)
 
 
+### transfer learning from InceptionV3
+#set this directory to where your 'data' directory is (where you store the train/validation image sets)
 basedir = '/Users/ggarbagnati/ds/metis/metisgh/sf17_ds5/local/Projects/05-Kojak'
 targetdir = basedir + '/data/train'
 valdir = basedir + '/data/validation'
@@ -64,23 +68,20 @@ nb_train_samples = jpg_counts(targetdir)
 nb_validation_samples = jpg_counts(valdir)
 nb_categories = get_num_classes(targetdir)
 batch_size = 32
-nb_epoch = 1
+nb_epoch = 50 # the initial transfer learning was done over 50 epochs
 
-'''
+
 # create the base pre-trained model
-#base_model = InceptionV3(weights='imagenet', include_top=False)
 model = InceptionV3(weights='imagenet', include_top=False)
 
 # add a global spatial average pooling layer
-#x = base_model.output
 x = model.output
 x = GlobalAveragePooling2D()(x)
 # add a fully-connected layer
-#x = Dense(1024, activation='relu', name='fc_1')(x)
 x = Dense(1024, activation='relu', name='fc_1')(x) # num of neurons in the layer
 predictions = Dense(nb_categories, activation='softmax')(x)
 
-'''
+
 
 
 '''
@@ -92,7 +93,8 @@ for layer in model.layers:
 fullmodel = Model(input=model.input, output=predictions)
 '''
 
-fullmodel = load_model('leafincepmodel-ft-3.h5')
+# load here if doing splitting up the epochs into different training sessions
+#fullmodel = load_model('leafincepmodel-ft-3.h5')
 
 # Freeze convolutional layers
 for layer in fullmodel.layers:
@@ -117,26 +119,26 @@ train_datagen = ImageDataGenerator(rotation_range=180,
 test_datagen = image.ImageDataGenerator(rescale=1./255)
 
 generator_train = train_datagen.flow_from_directory(
-        targetdir,
-        target_size=(img_width, img_height),
-        batch_size=batch_size,
-        class_mode='categorical')
+                                    targetdir,
+                                    target_size=(img_width, img_height),
+                                    batch_size=batch_size,
+                                    class_mode='categorical')
 
 generator_test = test_datagen.flow_from_directory(
-        valdir,
-        target_size=(img_width, img_height),
-        batch_size=batch_size,
-        class_mode='categorical')
+                                    valdir,
+                                    target_size=(img_width, img_height),
+                                    batch_size=batch_size,
+                                    class_mode='categorical')
 
 fullmodel.fit_generator(generator_train,
-            samples_per_epoch = nb_train_samples,
-            nb_epoch = nb_epoch,
-            validation_data = generator_test,
-            nb_val_samples = nb_validation_samples)
+                        samples_per_epoch = nb_train_samples,
+                        nb_epoch = nb_epoch,
+                        validation_data = generator_test,
+                        nb_val_samples = nb_validation_samples)
 
 
 '''
-# if I get time...
+# this was done over 25 epochs after the initial training was done (see incepleaf-2.py)
 
 #start fine-tuning
 # unfreeze the top 2 inception blocks
@@ -159,11 +161,5 @@ fullmodel.fit_generator(generator_train,
 
 fullmodel.save('leafincepmodel-test.h5')
 
-'''
-model_json = fullmodel.to_json()
-with open('incep_3_multi.json', 'w') as json_file:
-    json_file.write(model_json)
-fullmodel.save_weights('incep_3_multi.h5')
-'''
 
 print('Done!')

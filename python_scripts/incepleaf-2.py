@@ -1,3 +1,4 @@
+### imports
 from keras.applications.inception_v3 import InceptionV3
 from keras.preprocessing import image
 from keras.preprocessing.image import ImageDataGenerator
@@ -6,6 +7,7 @@ from keras.layers import Dense, GlobalAveragePooling2D
 from keras import backend as K
 from keras.optimizers import SGD, RMSprop
 
+### helper functions
 # gets jpg count for all images in given directory and all subdirectories
 def jpg_counts(dirpath, verbose=False):
     from os import listdir, walk
@@ -64,7 +66,7 @@ nb_train_samples = jpg_counts(targetdir)
 nb_validation_samples = jpg_counts(valdir)
 nb_categories = get_num_classes(targetdir)
 batch_size = 32
-nb_epoch = 1
+nb_epoch = 25
 
 # create the base pre-trained model
 #base_model = InceptionV3(weights='imagenet', include_top=False)
@@ -124,15 +126,14 @@ generator_test = test_datagen.flow_from_directory(
         batch_size=batch_size,
         class_mode='categorical')
 
+'''
 fullmodel.fit_generator(generator_train,
             samples_per_epoch = nb_train_samples,
             nb_epoch = nb_epoch,
             validation_data = generator_test,
             nb_val_samples = nb_validation_samples)
+'''
 
-
-
-# if I get time...
 
 #start fine-tuning
 # unfreeze the top 2 inception blocks
@@ -155,11 +156,5 @@ fullmodel.fit_generator(generator_train,
 
 fullmodel.save('leafincepmodel-test.h5')
 
-'''
-model_json = fullmodel.to_json()
-with open('incep_3_multi.json', 'w') as json_file:
-    json_file.write(model_json)
-fullmodel.save_weights('incep_3_multi.h5')
-'''
 
 print('Done!')
