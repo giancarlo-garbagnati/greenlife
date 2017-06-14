@@ -3,5 +3,5 @@ Leaf Health Image Classifier
 Project Date: April 2017  
 
 ![alt text](https://github.com/giancarlo-garbagnati/greenlife/raw/master/Apple-01.JPG "Apple Leaf" =250x400)  
-<img src="https://github.com/giancarlo-garbagnati/greenlife/raw/master/Apple-01.JPG" alt="Apple Leaf" width="200" height="400"/>  
+<img src="https://github.com/giancarlo-garbagnati/greenlife/raw/master/Apple-01.JPG" alt="Apple Leaf" width="125" height="200"/>  
 
