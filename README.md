@@ -6,7 +6,7 @@ Project Date: April 2017
 
 ## Description  
 
-PlantVillage recently [hosted](https://www.crowdai.org/challenges/plantvillage-disease-classification-challenge) a challenge to build an image classification model for plant images that could distinguish between crop species and can accurately diagnose if the plant has a disease (and which one) (for background on the dataset, refer to https://arxiv.org/abs/1604.03169). While I was too late to participate in the challenge, I still used the dataset to build this model. It was made using transfer learning of the convolutional neural network [InceptionV3](https://arxiv.org/abs/1512.00567) architecture. After training through 50+25 epochs (50 epochs training fully connected layer, and 25 epochs 'fine-tuning' the top 2 inception modules), the image classification model had over 90% accuracy, which is a credit to the power of deep-learning and to the folks at Google.  
+PlantVillage recently [hosted](https://www.crowdai.org/challenges/plantvillage-disease-classification-challenge) a challenge to build an image classification model for plant images that could distinguish between crop species and can accurately diagnose if the plant has a disease (and which one) (for background on the dataset, refer to https://arxiv.org/abs/1604.03169). While I was too late to participate in the challenge, I still used the dataset to build this model. It was made using transfer learning of the convolutional neural network (CNN) [InceptionV3](https://arxiv.org/abs/1512.00567) architecture.  
 
 ## Data Acquisition  
 
@@ -18,6 +18,8 @@ Once all the images were downloaded, the crops that didn't have both healthy and
 * 14 healthy crop categories (apple, banana, bell pepper, cabbage, cherry, corn, cucumber, grape, peach, potato, soybean, squash, strawberry, tomato)  
 * 32 diseased crop categories  
 
-
-
 ## Modeling/Results  
+
+<img src="https://github.com/giancarlo-garbagnati/greenlife/raw/master/images/inceptionv3.png" alt="Leaf Image Classification model and InceptionV3 Architecture"/>
+
+Above, is a general idea of how the model was built. The InceptionV3 CNN was already pre-trained on the imagenet data set, and so we can use transfer learning to rapidly build this leaf image classifier. Holding all the inception model (convolutional) layers frozen (so just training te fully collected layer), I trained through 50 epochs, then I unfroze thw two inception layers and trained an additional 25 epochs for further 'fine-tuning' of the model. In the end, the image classification model had over 90% accuracy, which is a tesiment more to the power of deep-learning and to the folks at Google who worked on InceptionV3.  
